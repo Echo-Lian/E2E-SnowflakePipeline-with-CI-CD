@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: raw_data
+    database: DEMO_DB
+    schema: RAW_DATA
+    tables:
+      - name: customers
+        description: Raw customer data from ingestion process

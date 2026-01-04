@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Staging model for customer data"
+    columns:
+      - name: customer_id
+        description: "Unique customer identifier"
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Customer name"
+        tests:
+          - not_null
+      - name: email
+        description: "Customer email address"
+        tests:
+          - not_null
+          - unique
+      - name: region
+        description: "Geographic region"
+        tests:
+          - accepted_values:
+              values: ['North America', 'Europe', 'Asia', 'Australia']
+      - name: signup_date
+        description: "Date when customer signed up"
+        tests:
+          - not_null

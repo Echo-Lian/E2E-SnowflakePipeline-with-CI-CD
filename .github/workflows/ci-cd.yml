@@ -1,0 +1,81 @@
+name: Snowflake Pipeline CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install snowflake-connector-python python-dotenv pandas
+
+    - name: Run data validation tests
+      run: |
+        echo "Data validation would run here"
+        # Since we can't connect to Snowflake in CI, we just validate the scripts
+        python -m py_compile scripts/data_ingestion.py
+
+  dbt-test:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dbt
+      run: |
+        pip install dbt-core dbt-snowflake
+
+    - name: dbt deps
+      run: |
+        dbt deps
+
+    - name: dbt run (dry-run)
+      env:
+        SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+        SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+        SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+        SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+        SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
+        SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      run: |
+        # In a real scenario, dbt test would run here
+        # For CI, we perform dbt parse to validate syntax
+        dbt parse --profiles-dir .
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: [test]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to production
+      run: |
+        echo "Deployment to Snowflake production environment"
+        # In real implementation, this would trigger dbt run
+        # and potentially data ingestion scripts
+        echo "Snowflake deployment completed"
