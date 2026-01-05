@@ -58,7 +58,7 @@ master/
 1. Clone this repository:
    ```bash
    git clone <repository-url>
-   cd snowflake-pipeline
+   cd E2E-SnowflakePipeline-with-CI-CD
    ```
 
 2. Create and activate virtual environment:
