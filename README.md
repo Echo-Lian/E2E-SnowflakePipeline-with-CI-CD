@@ -28,10 +28,10 @@ GitHub Actions → CI/CD Pipeline
 - **CI/CD Pipeline**: GitHub Actions workflow with PR testing and automated deployment
 - **Environment Management**: Separate dev and prod environments
 
-## Project Structure
+## File structure
 
 ```
-project/
+master/
 ├── .github/workflows/           # CI/CD workflows
 ├── models/                      # dbt models
 │   ├── staging/                 # Raw data staging models
