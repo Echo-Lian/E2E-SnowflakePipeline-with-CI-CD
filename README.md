@@ -66,7 +66,7 @@ E2E❄️Pipeline/
 
 ```bash
 git clone <repository-url>
-cd E2E❄️Pipeline
+cd E2E-SnowflakePipeline-with-CI-CD
 ```
 
 ### Step 2: Set Up Python Environment
